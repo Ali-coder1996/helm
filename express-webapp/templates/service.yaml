@@ -3,13 +3,13 @@ kind: Service
 metadata:
   name: {{ include "express-webapp.fullname" . }}
   labels:
-    {{- include "express-webapp.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "express-webapp.name" . }}
+    helm.sh/chart: {{ include "express-webapp.chart" . }}
 spec:
-  type: {{ .Values.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ include "express-webapp.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    {{- include "express-webapp.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}
